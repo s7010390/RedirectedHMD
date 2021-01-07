@@ -5,9 +5,8 @@ using UnityEngine;
 public class VirtualCamera : MonoBehaviour
 {
     public Transform Camera;
-    public float CameraRotationX;
     public float CameraRotationY;
-    public float CameraRotationZ;
+    public float HumanRotationY;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,13 +16,9 @@ public class VirtualCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        // CameraRotationX = Camera.eulerAngles.x;
         CameraRotationY = Camera.localEulerAngles.y;
+        HumanRotationY = - CameraRotationY * 0.5f;
 
-        // transform.rotation = Quaternion.Euler(0f, CameraRotationY * 2, 0f);
-        // CameraRotationZ = Camera.eulerAngles.z;
-
-        transform.eulerAngles = new Vector3(0f, -CameraRotationY + CameraRotationY * 0.5f, 0.0f);
+        transform.eulerAngles = new Vector3(0f, HumanRotationY, 0.0f);
     }
 }
