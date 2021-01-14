@@ -12,6 +12,7 @@ public class VirtualCamera : MonoBehaviour
 
     public int state;
     public int EnableChange = 1;
+    public float Gain = 0.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +37,7 @@ public class VirtualCamera : MonoBehaviour
         //checkstate
         
 
-        if( EnableChange == 1 && (CameraRotationY > 358 || CameraRotationY <= 2))
+        if( EnableChange == 1 && (CameraRotationY > 355 || CameraRotationY <= 5))
         {   
             if(Direct == 1  && state == 0 )
             {
@@ -60,24 +61,27 @@ public class VirtualCamera : MonoBehaviour
             }
         
         }
-        if(CameraRotationY > 2 && CameraRotationY <= 358 )
+        if(CameraRotationY > 5 && CameraRotationY <= 355 )
         {
             EnableChange = 1;
         }
 
         //Camera rotate
-        if( state == 1  && (CameraRotationY > 2 && CameraRotationY <= 358)) 
+        if(CameraRotationY > 5 && CameraRotationY <= 355)
         {
-            HumanRotationY = 360 - ( 180 - CameraRotationY*0.5f );
-            HumanRotationY = -HumanRotationY;
+            if( state == 1 ) 
+            {
+                HumanRotationY = 360 - ( 180 - CameraRotationY*Gain );
+                HumanRotationY = -HumanRotationY;
+            }
+            else 
+            {
+                HumanRotationY = -CameraRotationY*Gain ;
+            }
+           
+            transform.eulerAngles = new Vector3(0f, HumanRotationY, 0.0f);
         }
-        else if(state == 0) {
-            HumanRotationY = -CameraRotationY*0.5f ;
-
-
-        }
-       if(CameraRotationY > 2 && CameraRotationY <= 358)
-        transform.eulerAngles = new Vector3(0f, HumanRotationY, 0.0f);
+        
         lastValue = CameraRotationY;
         
         
