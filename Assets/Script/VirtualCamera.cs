@@ -8,7 +8,7 @@ public class VirtualCamera : MonoBehaviour
     public float CameraRotationY;
     public float HumanRotationY;
     public int Direct;
-    public float lastValue;
+    public int lastValue;
 
     public int state;
     public int EnableChange = 1;
@@ -23,10 +23,12 @@ public class VirtualCamera : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        int tme;
         CameraRotationY = Camera.localEulerAngles.y;
         HumanRotationY = CameraRotationY;
+        tme = (int)CameraRotationY;
         //check Direction
-        if(CameraRotationY > lastValue  )
+        if(tme > lastValue  )
         {
            Direct = 1;
         }
@@ -35,40 +37,24 @@ public class VirtualCamera : MonoBehaviour
            Direct = 2;
         }
         //checkstate
-        
-
         if( EnableChange == 1 && (CameraRotationY > 355 || CameraRotationY <= 5))
         {   
-            if(Direct == 1  && state == 0 )
+            if((Direct == 1  && state == 0 )||(Direct == 2  && state == 0))
             {
                 state = 1;
                  EnableChange = 0;
-            }
-            else if(Direct == 2  && state == 0)
-            {
-                state = 1;
-                 EnableChange = 0;
-            }
-            else if(Direct == 1 && state == 1)
+            }  
+            else if((Direct == 1 && state == 1)||(Direct == 2 && state == 1))
             {
                 state = 0;
                  EnableChange = 0;
-            }
-            else if(Direct == 2 && state == 1)
-            {
-                state = 0;
-                 EnableChange = 0;
-            }
-        
+            }  
         }
-        if(CameraRotationY > 5 && CameraRotationY <= 355 )
+        if(CameraRotationY < 355 && CameraRotationY > 5 )
         {
             EnableChange = 1;
-        }
-
         //Camera rotate
-        if(CameraRotationY > 5 && CameraRotationY <= 355)
-        {
+       
             if( state == 1 ) 
             {
                 HumanRotationY = 360 - ( 180 - CameraRotationY*Gain );
@@ -81,8 +67,7 @@ public class VirtualCamera : MonoBehaviour
            
             transform.eulerAngles = new Vector3(0f, HumanRotationY, 0.0f);
         }
-        
-        lastValue = CameraRotationY;
+        lastValue = (int)CameraRotationY;
         
         
    
