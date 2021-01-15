@@ -2196,6 +2196,7 @@ MonoBehaviour:
   lastValue: 0
   state: 0
   EnableChange: 0
+  Gain: 0.5
 --- !u!4 &1896135265 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4379673244704792, guid: 1be61187b5d765449be824463642cb0f,

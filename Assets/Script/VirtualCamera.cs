@@ -10,8 +10,10 @@ public class VirtualCamera : MonoBehaviour
     public int Direct;
     public int lastValue;
 
-    public int state;
-    public int EnableChange = 1;
+    public int state = 0;
+    public int EnableChange = 0;
+    public int LastEnableChange = 0;
+
     public float Gain = 0.5f;
 
     // Start is called before the first frame update
@@ -19,57 +21,103 @@ public class VirtualCamera : MonoBehaviour
     {
 
     }
-
     // Update is called once per frame
     void FixedUpdate()
     {
-        int tme;
         CameraRotationY = Camera.localEulerAngles.y;
         HumanRotationY = CameraRotationY;
-        tme = (int)CameraRotationY;
-        //check Direction
-        if(tme > lastValue  )
+   
+        SetDirection();    
+
+        CheckAndUpDate_State();
+        RotateCam();
+        transform.eulerAngles = new Vector3(0f, HumanRotationY, 0.0f); 
+        lastValue = (int)CameraRotationY;
+    
+    }
+
+    void SetDirection()
+    {
+        int tmp = (int)CameraRotationY - lastValue;
+        if(tmp > 1  )
         {
            Direct = 1;
         }
-        else
+        else if(tmp < -1)
         {
            Direct = 2;
         }
-        //checkstate
-        if( EnableChange == 1 && (CameraRotationY > 355 || CameraRotationY <= 5))
-        {   
-            if((Direct == 1  && state == 0 )||(Direct == 2  && state == 0))
+    }
+    void CheckAndUpDate_State()
+    {
+
+        if(Direct == 1 ){
+            if( HumanRotationY < 90 && LastEnableChange != 1)
             {
-                state = 1;
-                 EnableChange = 0;
-            }  
-            else if((Direct == 1 && state == 1)||(Direct == 2 && state == 1))
+                state += 1;
+                EnableChange = 1;
+                Debug.Log(state);
+            }
+            else if(HumanRotationY < 180 && HumanRotationY >= 90 && LastEnableChange != 2)
+            {  
+                state += 1;
+                EnableChange = 2;
+            }
+            else if(HumanRotationY < 270 && HumanRotationY >= 180 && LastEnableChange != 3)
             {
-                state = 0;
-                 EnableChange = 0;
-            }  
+                state += 1;
+                EnableChange = 3;
+            }
+            else if(HumanRotationY < 360 && HumanRotationY >= 270 && LastEnableChange != 4)
+            {                       
+                state += 1;
+                EnableChange = 4;
+                if( state == -2)
+                {
+                    state = 2;
+                }
+
+             }          
         }
-        if(CameraRotationY < 355 && CameraRotationY > 5 )
-        {
-            EnableChange = 1;
-        //Camera rotate
-       
-            if( state == 1 ) 
+        else  if(Direct == 2){
+
+            if( HumanRotationY < 90 && LastEnableChange != 1)
             {
-                HumanRotationY = 360 - ( 180 - CameraRotationY*Gain );
+                state -= 1;
+                EnableChange = 1;
+                if( state == 5)
+                {
+                        state = 1;
+                }
+            }
+            else if(HumanRotationY < 180 && HumanRotationY >= 90 && LastEnableChange != 2)
+            {
+                state -= 1;
+                EnableChange = 2;
+            }
+            else if(HumanRotationY < 270 && HumanRotationY >= 180 && LastEnableChange != 3)
+            {
+                state -= 1;
+                EnableChange = 3;
+            }
+            else if(HumanRotationY < 360 && HumanRotationY >= 270 && LastEnableChange != 4)
+            {
+                state -= 1;
+                EnableChange = 4;
+            }    
+        }        
+        LastEnableChange = EnableChange;
+    }
+    void RotateCam()
+    {
+        if( state ==  EnableChange + 2 || state ==  EnableChange - 2) 
+            {
+                HumanRotationY = 360 - ( 180 - CameraRotationY*Gain ); //Gain calculation
                 HumanRotationY = -HumanRotationY;
             }
-            else 
-            {
-                HumanRotationY = -CameraRotationY*Gain ;
-            }
-           
-            transform.eulerAngles = new Vector3(0f, HumanRotationY, 0.0f);
+        else 
+        {
+                HumanRotationY = -CameraRotationY*Gain ;    //Gain calculation
         }
-        lastValue = (int)CameraRotationY;
-        
-        
-   
     }
 }
