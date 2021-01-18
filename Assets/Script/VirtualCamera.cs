@@ -22,7 +22,7 @@ public class VirtualCamera : MonoBehaviour
 
     }
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         CameraRotationY = Camera.localEulerAngles.y;
         HumanRotationY = CameraRotationY;
