@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class InputTest : MonoBehaviour
 {
-    void OnNewAction()
-    {
-        Debug.Log("push button");
-    }
     // Start is called before the first frame update
     void Start()
     {
