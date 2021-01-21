@@ -6,99 +6,129 @@ using UnityEngine.UI;
 public class VirtualCamera : MonoBehaviour
 {
     public Transform Camera;
-    public GameObject CavasText;
 
-    public float CameraRotationY;
+    public float CameraRotationY ;
     public float HumanRotationY;
     public int Direct;
     public float lastValue;
     public int state = 0;
+    public float tmp ;
     int EnableChange = 0;
     int LastEnableChange = 0;
     float Gain = 0.5f;
-    float AutoRotateDirection = 0;
-    float y = 0;
-    float Speed ;
+    public int AutoRotateDirection = 0;
+    //float y = 0;
+    float Speed = 30 ;
     bool StartState = false;
+
     // Start is called before the first frame update
+    
     void OnRotateLeft()
     {
-            AutoRotateDirection = 0;
+            AutoRotateDirection = 1;
+
     }
     void OnRotateRight()
     {
-           AutoRotateDirection = 1;
- 
+           AutoRotateDirection = 0;
+
     }
+    
     void OnStartProgram()
     {
-           StartState = true;
-           CavasText.gameObject.SetActive(false);
+           if(StartState == false)
+           {
+                StartState = true;
+           }
+           else
+           {
+                StartState = false;
+           }
+           
     }
 
     void Start()
     {
-        RandomSpeed();       
+       // RandomSpeed();       
         Debug.Log("Speed:" + Speed);
+        //CameraRotationY = Camera.localEulerAngles.y ;
+        CameraRotationY = 0 + Time.deltaTime * Speed;
 
     }
     // Update is called once per frame
     void Update()
     {
-        if(StartState == true)
-        {
-            //CameraRotationY = Camera.localEulerAngles.y;
-            CameraRotationY = AutoRotateConstantSpeed();
-            HumanRotationY = CameraRotationY;
-            SetDirection();    
-            CheckAndUpDate_State();
-            RotateCam();            
-            transform.eulerAngles = new Vector3(0f, HumanRotationY, 0.0f); 
-            Camera.transform.eulerAngles = new Vector3(0,CameraRotationY,0);
+        
+            //Debug.Log(Camera.localEulerAngles.y );
+            if(StartState == false)
+            {
+        
+                float a = CameraRotationY;
+                CameraRotationY = Camera.localEulerAngles.y;
+                HumanRotationY = CameraRotationY;
+                SetDirection();    
+                CheckAndUpDate_State();
+                RotateCam();  
+                Camera.transform.eulerAngles = new Vector3(0,CameraRotationY,0);
+                transform.eulerAngles = new Vector3(0f, HumanRotationY, 0.0f); 
 
-            lastValue = CameraRotationY;
-        }
+                lastValue = CameraRotationY;
+
+            }
+            else
+            {
+
+                AutoRotateConstantSpeed();          
+                HumanRotationY = CameraRotationY;
+                SetDirection();    
+                CheckAndUpDate_State();
+                RotateCam();  
+                transform.eulerAngles = new Vector3(0f, -HumanRotationY, 0.0f); 
+                lastValue = CameraRotationY;
+
+            }
+        
     }
     void RandomSpeed()
     {
         int RanD = Random.Range(0,7);
         Speed = Mathf.Pow(2,RanD)/10;
     }
-    float AutoRotateConstantSpeed()
+    void AutoRotateConstantSpeed()
     {
         if(AutoRotateDirection == 0)
         {
-            if(y < 360 && y >0  )
+            if(CameraRotationY < 360 && CameraRotationY >0  )
             {
-                y += Time.deltaTime * Speed;
+                CameraRotationY += Time.deltaTime * Speed;
             }
             else
             {
-            y = 0 +Time.deltaTime * Speed;
+                CameraRotationY = 0 +Time.deltaTime * Speed;
             }
         }
         else if(AutoRotateDirection == 1)
         {
-            if(y < 360 && y > 0 )
+            if(CameraRotationY < 360 && CameraRotationY > 0 )
             {
-                y -= Time.deltaTime * Speed;
+                CameraRotationY -= Time.deltaTime * Speed;
             }
             else
             {
-            y = 360 - Time.deltaTime * Speed;
+            CameraRotationY = 360 - Time.deltaTime * Speed;
             }
         }
-        return y;
     }
 
     void SetDirection()
     {
-        float tmp = CameraRotationY - lastValue;
-        if(tmp > 0  )
+        tmp = CameraRotationY - lastValue;
+
+        if(tmp > 0.003  )
         {
            Direct = 1;
         }
-        else if(tmp < 0 )
+        else if(tmp < -0.003 )
         {
            Direct = 2;
         }
