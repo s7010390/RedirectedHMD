@@ -2328,16 +2328,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Camera: {fileID: 126008307}
-  CameraRotationY: 0
-  HumanRotationY: 0
-  Direct: 0
-  lastValue: 0
-  state: 0
-  EnableChange: 0
-  LastEnableChange: 0
-  Gain: 0.5
-  AutoRotateDirection: 0
-  y: 0
 --- !u!4 &1896135265 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4379673244704792, guid: 1be61187b5d765449be824463642cb0f,

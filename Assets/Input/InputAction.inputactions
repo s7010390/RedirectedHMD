@@ -28,6 +28,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "StartProgram",
+                    "type": "Button",
+                    "id": "9f081202-2500-4166-91d1-3849380d229c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -72,6 +80,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "RotateRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ece4ddc5-b702-4d73-9102-d7b2bd06cbfd",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StartProgram",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
