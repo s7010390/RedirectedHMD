@@ -17,12 +17,15 @@ public class VirtualCamera : MonoBehaviour
     int LastEnableChange = 0;
     float Gain = 0.5f;
     public int AutoRotateDirection = 0;
-    //float y = 0;
-    float Speed = 30 ;
+    float AutoLasValue;
+    float Speed ;
+    float timer;
     bool StartState = false;
-
-    // Start is called before the first frame update
-    
+    float secondsCount = 0;
+    string timerText ;
+    int[] sameRanCheck = { 0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5 };
+    int RanD;
+    int last = 18;
     void OnRotateLeft()
     {
             AutoRotateDirection = 1;
@@ -36,22 +39,37 @@ public class VirtualCamera : MonoBehaviour
     
     void OnStartProgram()
     {
+
            if(StartState == false)
-           {
+           {    
+               string tmp = " " ;
+                print("ON");
+                RandomSpeed();
+                Debug.Log("Speed:" + Speed);
                 StartState = true;
+                timer = secondsCount;
+                for(int i = 0;i < last;i++){
+                    tmp += sameRanCheck[i].ToString() + " " ;
+                }
+                print(tmp);
+
            }
            else
-           {
+           {    
+                print("OFF");
                 StartState = false;
+                timer = secondsCount - timer;
+                timer = timer%60;
+                timerText = timer.ToString("F2")+"s";
+                print(timerText);
+
+
            }
            
     }
 
     void Start()
-    {
-       // RandomSpeed();       
-        Debug.Log("Speed:" + Speed);
-        //CameraRotationY = Camera.localEulerAngles.y ;
+    {   
         CameraRotationY = 0 + Time.deltaTime * Speed;
 
     }
@@ -59,40 +77,58 @@ public class VirtualCamera : MonoBehaviour
     void Update()
     {
         
-            //Debug.Log(Camera.localEulerAngles.y );
-            if(StartState == false)
+           /* if(StartState == false)
             {
-        
-                float a = CameraRotationY;
+                
+                
                 CameraRotationY = Camera.localEulerAngles.y;
+                
                 HumanRotationY = CameraRotationY;
                 SetDirection();    
                 CheckAndUpDate_State();
                 RotateCam();  
                 Camera.transform.eulerAngles = new Vector3(0,CameraRotationY,0);
                 transform.eulerAngles = new Vector3(0f, HumanRotationY, 0.0f); 
-
                 lastValue = CameraRotationY;
-
+                AutoLasValue = 0;
             }
-            else
+            else*/
             {
-
-                AutoRotateConstantSpeed();          
+                UpdateTimerUI();
+                if(StartState == true){
+                    AutoRotateConstantSpeed();
+                }          
                 HumanRotationY = CameraRotationY;
                 SetDirection();    
                 CheckAndUpDate_State();
                 RotateCam();  
                 transform.eulerAngles = new Vector3(0f, -HumanRotationY, 0.0f); 
                 lastValue = CameraRotationY;
-
+                AutoLasValue = CameraRotationY;
             }
+            
         
     }
+    public void UpdateTimerUI(){
+     //set timer UI
+     secondsCount += Time.deltaTime;
+ }
     void RandomSpeed()
-    {
-        int RanD = Random.Range(0,7);
-        Speed = Mathf.Pow(2,RanD)/10;
+    {   
+        int tmp;
+        RanD = Random.Range(0,last);
+        Speed = Mathf.Pow(2,sameRanCheck[RanD] + 2)/10;
+        tmp = sameRanCheck[last-1];
+        sameRanCheck[last-1] = sameRanCheck[RanD];
+        sameRanCheck[RanD] = tmp;
+        print(last);
+        last--;
+
+        if(last < 1)
+        {   
+            last = 18;
+            print("End");
+        }
     }
     void AutoRotateConstantSpeed()
     {
